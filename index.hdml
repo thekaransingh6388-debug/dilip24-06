@@ -396,12 +396,14 @@
             if (toast) {
                 toast.textContent = message || '✅ Event tracked!';
                 toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), duration);
+                setTimeout(function() {
+                    toast.classList.remove('show');
+                }, duration);
             }
         }
         
         function fireTelegramTracking(buttonElement, position) {
-            let buttonText = buttonElement.innerText || 'Join Telegram';
+            var buttonText = buttonElement.innerText || 'Join Telegram';
             
             if (isFbqReady()) {
                 // 1. Lead Event
@@ -432,7 +434,7 @@
                     button_used: position
                 });
                 
-                console.log(`✅ [Pixel ${PIXEL_ID}] Events: Lead, Subscribe, CompleteRegistration (${position})`);
+                console.log('✅ [Pixel ' + PIXEL_ID + '] Events: Lead, Subscribe, CompleteRegistration (' + position + ')');
                 showToast('✅ Joined! Events tracked.', 1500);
             } else {
                 console.warn('⚠️ Facebook Pixel not ready');
@@ -446,7 +448,7 @@
             button.addEventListener('click', function(event) {
                 event.preventDefault();
                 fireTelegramTracking(this, position);
-                setTimeout(() => {
+                setTimeout(function() {
                     window.open(TELEGRAM_LINK, '_blank');
                 }, 300);
             });
@@ -460,9 +462,9 @@
         // ============================================
         if (isFbqReady()) {
             // Track scroll depth (25% & 50%)
-            let scrollTracked25 = false, scrollTracked50 = false;
+            var scrollTracked25 = false, scrollTracked50 = false;
             window.addEventListener('scroll', function() {
-                const scrollPercent = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
+                var scrollPercent = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
                 if (scrollPercent >= 0.25 && !scrollTracked25) {
                     scrollTracked25 = true;
                     fbq('trackCustom', 'ScrollDepth', { depth_percent: 25, page: 'pankaj_bhardwaj' });
@@ -474,9 +476,9 @@
             });
             
             // Track time spent on page
-            let sessionStart = Date.now();
+            var sessionStart = Date.now();
             window.addEventListener('beforeunload', function() {
-                const timeSpentSec = Math.floor((Date.now() - sessionStart) / 1000);
+                var timeSpentSec = Math.floor((Date.now() - sessionStart) / 1000);
                 if (timeSpentSec > 3) {
                     fbq('trackCustom', 'TimeOnPage', {
                         duration_seconds: timeSpentSec,
@@ -486,8 +488,8 @@
             });
         }
         
-        console.log(`✅ PANKAJ BHARDWAJ | Pixel ID: ${PIXEL_ID}`);
-        console.log(`✅ Telegram Link: ${TELEGRAM_LINK}`);
+        console.log('✅ PANKAJ BHARDWAJ | Pixel ID: ' + PIXEL_ID);
+        console.log('✅ Telegram Link: ' + TELEGRAM_LINK);
         console.log('✅ 2 Join buttons tracked with: Lead, Subscribe, CompleteRegistration');
         
         // Debug helper
@@ -498,8 +500,12 @@
                     console.log('✅ Test Lead event triggered');
                 }
             },
-            getPixelId: () => PIXEL_ID,
-            getChannelLink: () => TELEGRAM_LINK
+            getPixelId: function() {
+                return PIXEL_ID;
+            },
+            getChannelLink: function() {
+                return TELEGRAM_LINK;
+            }
         };
     })();
 </script>
